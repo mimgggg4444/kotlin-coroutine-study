@@ -249,6 +249,7 @@
 
 ## 12장 코루틴 단위 테스트
 <div id="12"></div>
+<a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 12.1. 단위 테스트 기초
 #### 12.1.1. 단위 테스트란 무엇인가?
