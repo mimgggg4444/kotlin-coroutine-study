@@ -9,8 +9,10 @@
 # 목차
 
 
-##<a href="#1">1장 스레드 기반 작업의 한계와 코루틴의 등장</a>
+<a href="#1">1장 스레드 기반 작업의 한계와 코루틴의 등장</a>
+/n
 <a href="#2">2장 코루틴 개발 환경 설정</a>
+/n
 <a href="#3">CoroutineDispatcher</a>
 <a href="#4">코루틴 빌더와 Job</a>
 <a href="#5">async와 Deferred</a>
