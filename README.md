@@ -7,32 +7,22 @@
 
 
 # 목차
-
-
 <a href="#1">1장 스레드 기반 작업의 한계와 코루틴의 등장</a>
-/n
 <a href="#2">2장 코루틴 개발 환경 설정</a>
-/n
-<a href="#3">CoroutineDispatcher</a>
-<a href="#4">코루틴 빌더와 Job</a>
-<a href="#5">async와 Deferred</a>
-<a href="#6">CoroutineContext</a>
-<a href="#7">구조화된 동시성</a>
-<a href="#8">예외 처리</a>
-<a href="#9">일시 중단 함수</a>
-<a href="#10">코루틴의 이해</a>
-<a href="#11">코루틴 심화</a>
-<a href="#12">코루틴 단위 테스트</a>
+<a href="#3">3장 CoroutineDispatcher</a>
+<a href="#4">4장 코루틴 빌더와 Job</a>
+<a href="#5">5장 async와 Deferred</a>
+<a href="#6">6장 CoroutineContext</a>
+<a href="#7">7장 구조화된 동시성</a>
+<a href="#8">8장 예외 처리</a>
+<a href="#9">9장 일시 중단 함수</a>
+<a href="#10">10장 코루틴의 이해</a>
+<a href="#11">11장 코루틴 심화</a>
+<a href="#12">12장코루틴 단위 테스트</a>
 
 
 
 
-
-
-
-
-<a href="#target-section">지정된 섹션으로 이동</a>
-<div id="target-section">여기는 이동하고자 하는 섹션입니다.</div>
 
 
 
