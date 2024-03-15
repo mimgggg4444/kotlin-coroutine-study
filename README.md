@@ -49,7 +49,7 @@ Thread 클래스를 직접 확장하거나 Runnable 인터페이스를 구현하
 ```kotlin
 Thread thread = new Thread(() -> System.out.println("Thread running"));
 thread.start();
-위 코드는 새 스레드를 생성하여 "Thread running"을 출력합니다.
+//위 코드는 새 스레드를 생성하여 "Thread running"을 출력합니다.
 
 ```
 
@@ -59,7 +59,7 @@ Executor 프레임워크를 사용하면 스레드풀을 통해 스레드의 생
 ExecutorService executor = Executors.newFixedThreadPool(10);
 executor.execute(() -> System.out.println("Running in a thread pool"));
 executor.shutdown();
-이 코드는 스레드풀에서 작업을 실행합니다.
+//이 코드는 스레드풀에서 작업을 실행합니다.
 
 ```
 #### 1.3.3. 이후의 멀티 스레드 프로그래밍과 한계
@@ -255,7 +255,7 @@ suspend fun fetchData(): Data {
     // 데이터를 비동기적으로 가져오는 로직
 }
 
-설명: suspend 키워드를 사용하여 정의된 fetchData 함수는 비동기 작업을 수행하는 동안 실행을 일시 중단하고, 작업 완료 후 재개됩니다.
+//설명: suspend 키워드를 사용하여 정의된 fetchData 함수는 비동기 작업을 수행하는 동안 실행을 일시 중단하고, 작업 완료 후 재개됩니다.
 ```
 #### 9.1.2. 일시 중단 함수는 코루틴이 아니다
 핵심내용: 일시 중단 함수 자체는 코루틴이 아니지만, 코루틴 내에서 실행될 수 있습니다.
@@ -264,7 +264,7 @@ suspend fun fetchData(): Data {
 GlobalScope.launch {
     val data = fetchData() // 일시 중단 함수 호출
 }
-설명: fetchData 일시 중단 함수는 GlobalScope.launch 코루틴 내에서 호출됩니다. 이는 일시 중단 함수가 코루틴 내부에서 실행될 수 있음을 보여줍니다.
+//설명: fetchData 일시 중단 함수는 GlobalScope.launch 코루틴 내에서 호출됩니다. 이는 일시 중단 함수가 코루틴 내부에서 실행될 수 있음을 보여줍니다.
 ```
 #### 9.1.3. 일시 중단 함수를 별도의 코루틴상에서 실행하기
 핵심내용: 일시 중단 함수는 코루틴 빌더를 사용하여 별도의 코루틴으로 실행될 수 있습니다.
@@ -274,7 +274,7 @@ launch {
     val data = async { fetchData() }.await()
 }
 
-설명: async 빌더는 fetchData 함수를 별도의 코루틴으로 실행하며, await를 통해 그 결과를 기다립니다.
+//설명: async 빌더는 fetchData 함수를 별도의 코루틴으로 실행하며, await를 통해 그 결과를 기다립니다.
 ```
 
 ### 9.2. 일시 중단 함수의 사용
@@ -286,7 +286,7 @@ launch {
 suspend fun process() {
     val data = fetchData() // 다른 일시 중단 함수 내에서 호출
 }
-설명: process 일시 중단 함수 내에서 fetchData 일시 중단 함수를 호출하는 예시입니다.
+//설명: process 일시 중단 함수 내에서 fetchData 일시 중단 함수를 호출하는 예시입니다.
 ```
 #### 9.2.2. 일시 중단 함수에서 코루틴 실행하기
 핵심내용: 일시 중단 함수 내에서도 코루틴을 실행하여 비동기 작업을 수행할 수 있습니다.
@@ -298,7 +298,7 @@ suspend fun loadData() {
         // 데이터 처리 로직
     }
 }
-설명: coroutineScope 블록 내에서 async를 사용하여 fetchData 함수를 비동기적으로 실행하는 방법을 보여줍니다.
+//설명: coroutineScope 블록 내에서 async를 사용하여 fetchData 함수를 비동기적으로 실행하는 방법을 보여줍니다.
 ```
 
 ## 10장 코루틴의 이해
