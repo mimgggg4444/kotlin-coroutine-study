@@ -46,7 +46,7 @@ JVM(Java Virtual Machine)은 자바 애플리케이션을 실행하는 프로세
 #### 1.3.1. Thread 클래스를 사용하는 방법과 한계
 Thread 클래스를 직접 확장하거나 Runnable 인터페이스를 구현하여 사용할 수 있으나, 스레드 관리와 리소스 활용에 한계가 있습니다.
 
-```
+```kotlin
 Thread thread = new Thread(() -> System.out.println("Thread running"));
 thread.start();
 위 코드는 새 스레드를 생성하여 "Thread running"을 출력합니다.
@@ -55,7 +55,7 @@ thread.start();
 
 #### 1.3.2. Executor 프레임웍을 통해 스레드풀 사용하기
 Executor 프레임워크를 사용하면 스레드풀을 통해 스레드의 생성과 관리를 효율적으로 할 수 있습니다.
-```
+```kotlin
 ExecutorService executor = Executors.newFixedThreadPool(10);
 executor.execute(() -> System.out.println("Running in a thread pool"));
 executor.shutdown();
@@ -72,8 +72,7 @@ executor.shutdown();
 #### 1.4.2. 코루틴은 스레드 블로킹 문제를 어떻게 극복하는가?
 코루틴은 비동기 프로그래밍을 단순화하며, 경량 스레드처럼 동작하되 스레드의 블로킹 없이 비동기 작업을 효율적으로 관리합니다.
 
-```
-kotlin
+```kotlin
 suspend fun loadData
 ```
 
@@ -251,7 +250,7 @@ suspend fun loadData
 #### 9.1.1. 일시 중단 함수란 무엇인가?
 핵심내용: 일시 중단 함수는 실행을 일시 중단할 수 있고, 나중에 다시 재개할 수 있는 특별한 종류의 함수입니다.
 코드 예시:
-```
+```kotlin
 suspend fun fetchData(): Data {
     // 데이터를 비동기적으로 가져오는 로직
 }
@@ -261,8 +260,7 @@ suspend fun fetchData(): Data {
 #### 9.1.2. 일시 중단 함수는 코루틴이 아니다
 핵심내용: 일시 중단 함수 자체는 코루틴이 아니지만, 코루틴 내에서 실행될 수 있습니다.
 코드 예시:
-```
-kotlin
+```kotlin
 GlobalScope.launch {
     val data = fetchData() // 일시 중단 함수 호출
 }
@@ -271,8 +269,7 @@ GlobalScope.launch {
 #### 9.1.3. 일시 중단 함수를 별도의 코루틴상에서 실행하기
 핵심내용: 일시 중단 함수는 코루틴 빌더를 사용하여 별도의 코루틴으로 실행될 수 있습니다.
 코드 예시:
-```
-kotlin
+```kotlin
 launch {
     val data = async { fetchData() }.await()
 }
@@ -285,8 +282,7 @@ launch {
 #### 9.2.1. 일시 중단 함수의 호출 가능 지점
 핵심내용: 일시 중단 함수는 다른 일시 중단 함수나 코루틴 내부에서만 호출될 수 있습니다.
 코드 예시:
-```
-kotlin
+```kotlin
 suspend fun process() {
     val data = fetchData() // 다른 일시 중단 함수 내에서 호출
 }
@@ -295,8 +291,7 @@ suspend fun process() {
 #### 9.2.2. 일시 중단 함수에서 코루틴 실행하기
 핵심내용: 일시 중단 함수 내에서도 코루틴을 실행하여 비동기 작업을 수행할 수 있습니다.
 코드 예시:
-```
-kotlin
+```kotlin
 suspend fun loadData() {
     coroutineScope {
         val data = async { fetchData() }
