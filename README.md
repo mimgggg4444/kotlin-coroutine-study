@@ -84,25 +84,60 @@ suspend fun loadData
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 2.1. 인텔리제이 아이디어 설치 및 둘러보기
+
 #### 2.1.1. 인텔리제이 아이디어 설치하기
 ### 2.2. 코틀린 프로젝트 생성하고 화면 구성 살펴보기
 #### 2.2.1. 프로젝트 생성하기
 #### 2.2.2. IDE 구성 살펴보기
 ### 2.3. 첫 코루틴 실행하기
 #### 2.3.1. 코루틴 라이브러리 추가하기
+```gradle
+dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.X.X'
+}
+```
 #### 2.3.2. 첫 코루틴 실행하기
+```kotlin
+import kotlinx.coroutines.*
+
+fun main() = runBlocking { 
+    launch { 
+        delay(1000L)
+        println("World!") 
+    }
+    println("Hello,")
+}
+```
 ### 2.4. 코루틴 디버깅 환경 설정하기
 #### 2.4.1. 실행 중인 스레드 출력하기
+```kotlin
+println(Thread.currentThread().name)
+```
 #### 2.4.2. 실행 중인 코루틴 이름 출력하기
+```kotlin
+println(coroutineContext[CoroutineName]?.name)
+```
 #### 2.4.3. launch 사용해 코루틴 추가로 실행하기
+```kotlin
+launch {
+    // 코루틴 내 작업
+}
+```
 #### 2.4.4. CoroutineName 사용해 코루틴에 이름 추가하기
 
+```kotlin
+launch(CoroutineName("MyCoroutine")) {
+    // Named coroutine for debugging
+}
+```
 
 ## 3장 CoroutineDispatcher
 <div id="3"></div>
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 3.1. CoroutineDispatcher란 무엇인가?
+- `CoroutineDispatcher`는 코루틴이 어떤 스레드에서 실행될지를 결정하는 코틀린의 구성 요소입니다.
+
 #### 3.1.1. CoroutineDispatcher의 동작 살펴보기
 #### 3.1.2. CoroutineDispatcher의 역할
 ### 3.2. 제한된 디스패처와 무제한 디스패처
