@@ -446,25 +446,96 @@ val newContext = combinedContext - CoroutineName.Key
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 7.1. 실행 환경 상속
+- 코루틴은 기본적으로 부모 코루틴의 `CoroutineContext`를 상속받으며, 이를 통해 실행 환경을 공유합니다.
+
 #### 7.1.1. 부모 코루틴의 실행 환경 상속
+```kotlin
+val parentJob = Job()
+val scope = CoroutineScope(Dispatchers.Default + parentJob)
+scope.launch {
+    // 이 코루틴은 부모의 CoroutineScope와 CoroutineContext를 상속받습니다.
+}
+// - 부모 코루틴으로부터 실행 환경을 상속받아 같은 컨텍스트와 스코프 내에서 작업을 수행합니다.
+```
 #### 7.1.2. 실행 환경 덮어씌우기
+```kotlin
+scope.launch(Dispatchers.IO) {
+    // 이 코루틴은 부모의 CoroutineScope를 상속받았지만, 디스패처는 IO로 덮어씌워 사용합니다.
+}
+//- 특정 코루틴에서 실행 환경(예: 디스패처)을 변경하여 부모 코루틴의 환경을 덮어쓸 수 있습니다.
+```
 #### 7.1.3. 상속되지 않는 Job
+- 부모 코루틴에서 `launch` 등을 사용해 생성된 자식 코루틴의 `Job`은 별도의 인스턴스이며, 부모와 독립적으로 관리됩니다.
+
 #### 7.1.4. 구조화에 사용되는 Job
+```kotlin
+val parentJob = Job()
+val childJob = scope.launch(parentJob) {
+    // ...
+}
+//- 부모 코루틴의 `Job`을 자식 코루틴에게 직접 전달하여 구조화된 동시성을 통해 작업 관리를 수행합니다.
+```
 ### 7.2. 코루틴의 구조화와 작업 제어
+- 코루틴의 구조화는 작업의 제어를 용이하게 하며, 취소 및 완료 등의 동작을 코루틴 트리에 전파합니다.
+
 #### 7.2.1. 취소의 전파
+- 부모 코루틴이 취소되면 그 자식 코루틴들 역시 취소되어 취소가 모든 하위 코루틴에 전파됩니다.
+
 #### 7.2.2. 부모 코루틴의 자식 코루틴에 대한 완료 의존성
+- 부모 코루틴은 자신의 모든 자식 코루틴들이 완료될 때까지 자동으로 기다림으로써 작업의 단계적 완료를 보장합니다.
+
 ### 7.3. CoroutineScope 사용해 코루틴 관리하기
+- `CoroutineScope`를 생성하여 코루틴의 생명주기를 관리하고, 스코프 내 코루틴들 사이의 종속성을 설정합니다.
+
 #### 7.3.1. CoroutineScope 생성하기
+```kotlin
+val scope = CoroutineScope(Dispatchers.Default)
+//- `CoroutineScope` 객체를 생성하여 코루틴을 그룹화하고, 제어 및 관리의 기점으로 사용합니다.
+```
 #### 7.3.2. 코루틴에게 실행 환경을 제공하는 CoroutineScope
+- 생성된 `CoroutineScope`는 코루틴에 컨텍스트와 생명주기를 전달하여 실행 환경을 제공합니다.
+
 #### 7.3.3. CoroutineScope에 속한 코루틴의 범위
+- `CoroutineScope` 내에서 생성된 코루틴은 해당 스코프에 종속되어 스코프의 생명주기에 맞춰 실행됩니다.
+
 #### 7.3.4. CoroutineScope 취소하기
+```kotlin
+scope.cancel()
+//- `scope.cancel()`을 호출하여 `CoroutineScope` 내 모든 코루틴을 취소하고 자원을 해제할 수 있습니다.
+```
 #### 7.3.5. CoroutineScope 활성화 상태 확인하기
+```kotlin
+if (scope.isActive) {
+    // CoroutineScope 내 코루틴들이 아직 활성화 상태인지 확인
+}
+//- `CoroutineScope`의 `isActive` 속성을 통해 스코프의 활성 상태를 확인할 수 있습니다.
+```
 ### 7.4. 구조화와 Job
+- `Job`은 코루틴의 생명주기를 대표하며, 구조화된 동시성을 통해 코루틴 구조와 종속성을 관리합니다.
+
 #### 7.4.1. runBlocking과 루트 Job
+```kotlin
+runBlocking {
+    // 이 블록 내에서 생성된 코루틴들은 runBlocking의 Job을 상속받습니다.
+}
+//- `runBlocking` 내에서 시작된 코루틴은 `runBlocking`의 `Job`을 상속받아 계층적 구조를 형성합니다.
+```
 #### 7.4.2. Job 구조화 깨기
+- 자식 코루틴을 다른 스코프로 이동하거나 고립시켜 부모-자식 관계를 끊을 수 있으며, 이 경우 부모 코루틴의 취소가 자식 코루틴에 영향을 미치지 않습니다.
+
 #### 7.4.3. Job 사용해 일부 코루틴만 취소되지 않게 만들기
+```kotlin
+val independentJob = Job()
+scope.launch(independentJob) {
+    // 이 코루틴은 스코프가 취소되어도 취소되지 않습니다.
+}
+//- 별도의 `Job` 객체를 사용하여 `CoroutineScope`의 취소로부터 독립된 코루틴을 실행할 수 있습니다.
+```
 #### 7.4.4. 생성된 Job의 부모를 명시적으로 설정하기
+- 코루틴의 `Job` 파라미터를 명시적으로 설정함으로써 부모-자식 관계를 설정하고, 구조화된 작업 흐름을 만들 수 있습니다.
+
 #### 7.4.5. 생성된 Job은 자동으로 실행 완료되지 않는다
+- 코루틴이 `Job`과 함께 시작되었을 때, 이 작업의 완료는 자동으로 발생하지 않으며 개발자가 관리해야 합니다.
 
 
 ## 8장 예외 처리
