@@ -329,17 +329,58 @@ fun printJobStatus(job: Job) {
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 5.1. async 사용해 결괏값 수신하기
+- `async`는 코루틴을 비동기적으로 실행하여 결과를 `Deferred` 객체로 반환하고, 나중에 그 결과를 받을 수 있게 해주는 함수입니다.
+
 #### 5.1.1. async 사용해 Deferred 만들기
+```kotlin
+
+val deferredResult = async { computeSomething() }
+//- 이 코드는 `computeSomething()` 함수를 비동기적으로 실행하고, 반환된 값을 나중에 받기 위한 `Deferred` 객체를 만듭니다.
+```
 #### 5.1.2. await를 사용한 결괏값 수신
+```kotlin
+
+val result = deferredResult.await()
+- `await()` 함수를 호출하여 `Deferred` 객체가 가지고 있는 결과값을 비동기적으로 받습니다; 결과가 준비될 때까지 대기합니다.
+```
 ### 5.2. Deferred는 특수한 형태의 Job이다
+- `Deferred`는 `Job`의 하위 타입으로, 작업이 완료될 때까지의 결과를 담고 있으며, 해당 결과를 `await()`을 통해 얻을 수 있습니다.
+
 ### 5.3. 복수의 코루틴으로부터 결괏값 수신하기
+- 여러 `async` 코루틴이 실행되고 있을 때, 각각의 결과 값을 하나로 모아 수신할 수 있습니다.
+
 #### 5.3.1. await를 사용해 복수의 코루틴으로부터 결괏값 수신하기
+```kotlin
+val deferredOne = async { computeOne() }
+val deferredTwo = async { computeTwo() }
+val resultOne = deferredOne.await() 
+val resultTwo = deferredTwo.await()
+//- 위 코드에서 `computeOne()`과 `computeTwo()`는 동시에 비동기적으로 실행되며, 각각의 결과는 `await()`을 통해 수신됩니다.
+```
 #### 5.3.2. awaitAll을 사용한 결괏값 수신
+```kotlin
+val results = awaitAll(deferredOne, deferredTwo)
+//- `awaitAll` 함수를 사용해 복수의 `Deferred` 객체로부터 모든 결과를 수신할 때까지 대기하고, 결과들을 리스트로 반환받습니다.
+```
 #### 5.3.3. 컬렉션에 대해 awaitAll 사용하기
+```kotlin
+val deferredList = listOf(async { computeOne() }, async { computeTwo() })
+val results = deferredList.awaitAll()
+//- `awaitAll`은 `Deferred` 객체의 리스트에 대해서도 사용할 수 있으며, 모든 객체의 결과를 수신할 때까지 대기합니다.
+```
 ### 5.4. withContext
+- `withContext`는 지정한 컨텍스트(예: 디스패처)에서 코루틴을 실행하고 결과를 직접 반환하는 기능을 제공합니다.
+
 #### 5.4.1. withContext로 async-await 대체하기
+```kotlin
+val result = withContext(Dispatchers.Default) { computeSomething() }
+//- `withContext(Dispatchers.Default)`를 사용하면 `computeSomething()`이 기본 디스패처에서 실행되고, 실행이 완료되면 결과를 바로 반환합니다.
+```
 #### 5.4.2. withContext의 동작 방식
+- `withContext`는 주어진 컨텍스트로 코루틴을 전환하고, 블록 내의 코드를 실행한 다음 그 결과를 반환하며 원래 컨텍스트로 돌아갑니다.
+
 #### 5.4.3. withContext 사용 시 주의점
+- `withContext`를 사용할 때는 코드 블록이 무거울 경우 현재 실행되는 다른 코루틴들이 차단될 수 있으니, 스레드 관리에 주의해야 합니다.
 
 
 ## 6장 CoroutineContext
