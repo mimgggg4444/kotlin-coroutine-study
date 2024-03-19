@@ -543,28 +543,118 @@ scope.launch(independentJob) {
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 8.1. 코루틴의 예외 전파
+코루틴에서 발생한 예외는 기본적으로 코루틴 계층을 따라 상위로 전파되며, 이를 통해 오류를 처리할 수 있습니다.
+
 #### 8.1.1. 코루틴에서 예외가 전파되는 방식
+코루틴 내부에서 발생한 예외는 부모 코루틴까지 전파되고, 최종적으로 이를 처리하지 않으면 애플리케이션을 종료시킬 수 있습니다.
+
 #### 8.1.2. 예제로 알아보는 예외 전파
+```kotlin
+launch {
+    throw Exception("This exception will be propagated to the parent coroutine")
+}
+//- 이 코드에서 `launch` 내부에서 발생하는 예외는 외부로 전파되어 코루틴의 부모에게 도달합니다.
+```
 ### 8.2. 예외 전파 제한
+특정 구성 요소를 사용해 코루틴에서 발생하는 예외의 전파를 제한하고, 더 상위로의 전파를 방지할 수 있습니다.
+
 #### 8.2.1. Job 객체를 사용한 예외 전파 제한
+```kotlin
+val job = Job()
+launch(job) { // 예외 처리를 담당하는 코드 } job.invokeOnCompletion { exception -> if (exception is MyException) handleException(exception) }
+//- `Job` 객체와 `invokeOnCompletion`을 사용하여 특정 예외를 처리하고 전파를 제한할 수 있습니다.
+```
 #### 8.2.2. SupervisorJob 객체를 사용한 예외 전파 제한
+```kotlin
+val job = SupervisorJob()
+launch(job) { // 자식 코루틴에서 발생한 예외는 다른 자식 코루틴에 영향을 미치지 않습니다. }
+//- `SupervisorJob`을 사용하면 자식 코루틴 중 하나에서 발생한 예외가 다른 자식들에게 영향을 주지 않습니다.
+```
 #### 8.2.3. supervisorScope를 사용한 예외 전파 제한
+```kotlin
+supervisorScope {
+    launch {
+        // 이 블록 내부에서 발생한 예외는 해당 스코프 내 다른 코루틴에 영향을 주지 않습니다.
+    }
+}
+//- `supervisorScope`는 내부 코루틴의 예외가 동일 스코프의 다른 코루틴에게 영향을 주지 않도록 합니다.
+```
 ### 8.3. CoroutineExceptionHandler를 사용한 예외 처리
+코루틴에서 발생하는 예외를 전역적으로 잡아 처리하기 위해 `CoroutineExceptionHandler`가 사용됩니다.
+
 #### 8.3.1. CoroutineExceptionHandler 생성
+```kotlin
+val handler = CoroutineExceptionHandler { _, exception -> handleException(exception) }
+//- `CoroutineExceptionHandler`를 생성해 코루틴 내부에서 처리되지 않은 예외를 잡아 처리할 수 있습니다.
+```
 #### 8.3.2. CoroutineExceptionHandler 사용
+```kotlin
+launch(handler) {
+    // 예외가 여기서 발생하면 CoroutineExceptionHandler가 처리합니다.
+}
+//- `CoroutineExceptionHandler`를 코루틴 컨텍스트에 추가하여 예외를 처리합니다.
+```
 #### 8.3.3. 처리되지 않은 예외만 처리하는 CoroutineExceptionHandler
+`CoroutineExceptionHandler`는 코루틴 내에서 처리되지 않은 예외에 대해서만 동작합니다.
+
 #### 8.3.4. CoroutineExceptionHandler가 예외를 처리하도록 만들기
+코루틴 컨텍스트에 `CoroutineExceptionHandler`를 명시적으로 추가하여 예외 처리를 위임합니다.
+
 #### 8.3.5. CoroutineExceptionHandler는 예외 전파를 제한하지 않는다
+`CoroutineExceptionHandler`는 예외를 잡기는 하지만 자동으로는 예외의 전파를 중단시키지 않습니다.
+
 ### 8.4. try catch문을 사용한 예외 처리
+코루틴 내부에서 발생하는 예외는 전통적인 try-catch 문을 사용하여 직접 잡고 처리할 수 있습니다.
+
 #### 8.4.1. try catch문을 사용해 코루틴 예외 처리하기
+```kotlin
+launch {
+    try {
+        // 예외가 발생할 수 있는 코드
+    } catch (e: Exception) {
+        handleException(e)
+    }
+}
+//- 이 코드는 코루틴 내에서 발생할 수 있는 예외를 try-catch문을 이용해 직접 잡고 처리합니다.
+```
 #### 8.4.2. 코루틴 빌더 함수에 대한 try catch문은 코루틴의 예외를 잡지 못한다
+코루틴 빌더 함수 외부에 있는 try-catch문은 해당 코루틴 내부에서 발생한 예외를 잡지 못합니다.
+
 ### 8.5. async의 예외 처리
+`async` 빌더로 작성한 코루틴은 예외를 `Deferred` 객체를 통해 전파하고, 이는 `await` 호출 시점에 노출됩니다.
+
 #### 8.5.1. async의 예외 노출
+```kotlin
+val deferred = async {
+    throw Exception("Error in async")
+}
+try {
+    deferred.await()
+} catch (e: Exception) {
+    handleException(e)
+}
+//- `async` 코루틴의 예외는 `await` 호출 시 노출되고, 이를 통해 예외를 처리할 수 있습니다.
+```
 #### 8.5.2. async의 예외 전파
+`async`로 생성된 `Deferred` 객체에서 `await`은 코루틴 내부에서 발생한 예외를 호출자에게 전파합니다.
+
 ### 8.6. 전파되지 않는 예외
+특정 예외는 코루틴 실행을 제어하기 위한 목적으로 사용될 때 전파되지 않습니다.
+
 #### 8.6.1. 전파되지 않는 CancellationException
+`CancellationException`은 코루틴의 정상적인 취소를 나타내며, 이는 일반적으로 코루틴의 부모에게 전파되지 않습니다.
+
 #### 8.6.2. 코루틴취소 시 사용되는 JobCancellationException
+`JobCancellationException`은 코루틴의 취소를 나타내는 예외로, 이 역시 취소를 나타내는 데 사용됩니다.
+
 #### 8.6.3. withTimeOut 사용해 코루틴의 실행 시간 제한하기
+```kotlin
+
+withTimeout(1000L) {
+    // 시간이 초과되면 TimeoutCancellationException이 발생해 코루틴이 취소됩니다.
+}
+//- `withTimeout`은 정해진 시간 내에 코루틴이 완료되지 않으면 `TimeoutCancellationException`을 발생시켜 코루틴을 취소합니다.
+```
 
 
 ## 9장 일시 중단 함수
