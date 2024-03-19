@@ -209,29 +209,119 @@ val limitedDispatcher = Dispatchers.Default.limitedParallelism(2)
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 4.1. join을 사용한 코루틴 순차 처리
+- `join` 함수를 이용하면 한 코루틴이 완료되기를 기다린 후 다음 코루틴을 실행하여 작업을 순차적으로 처리할 수 있습니다.
+
 #### 4.1.1. 순차 처리가 안 될 경우의 문제
+- 코루틴이 동시에 실행될 경우 서로의 결과에 의존하는 작업들이 예상되는 순서대로 완료되지 않을 수 있는 문제가 발생할 수 있습니다.
+
 #### 4.1.2. join 함수 사용해 순차 처리하기
+```kotlin
+val job = launch {
+    // 어떤 처리를 합니다.
+}
+job.join() // 위에서 시작한 코루틴이 완료될 때까지 기다립니다.
+- 위 코드는 `launch`를 통해 시작된 코루틴이 완료될 때까지 현재 스레드 또는 코루틴을 차단하는 `join()` 함수를 호출하여 순차적인 실행을 보장합니다.
+```
 ### 4.2. joinAll을 사용한 코루틴 순차 처리
+- `joinAll` 함수는 여러 코루틴이 모두 완료될 때까지 대기할 수 있도록 하여, 복수의 코루틴을 효과적으로 순차적으로 처리합니다.
+
 #### 4.2.1. joinAll 함수
+- `joinAll`은 매개변수로 받은 모든 코루틴이 완료될 때까지 현재 스레드 또는 코루틴을 차단합니다.
+
 #### 4.2.2. joinAll 함수 사용해 보기
+```kotlin
+val job1 = launch { /* ... */ }
+val job2 = launch { /* ... */ }
+joinAll(job1, job2)
+- 위 코드는 `job1`과 `job2` 두 코루틴이 모두 완료될 때까지 대기하도록 하여 두 작업이 모두 끝난 후에 다음 작업을 수행하게 합니다.
+```
 ### 4.3. CoroutineStart.LAZY 사용해 코루틴 지연 시작하기
+- `CoroutineStart.LAZY` 옵션을 사용하면 코루틴을 즉시 시작하지 않고, 필요한 시점까지 실행을 지연시킬 수 있습니다.
+
 #### 4.3.1. 지연 시작을 살펴보기 위한 준비
+- 지연 시작하려는 코루틴을 정의하고 `CoroutineStart.LAZY`를 파라미터로 넘겨서 초기화하지 않습니다.
+
 #### 4.3.2. CoroutineStart.LAZY 사용해 코루틴 지연 시작하기
+```kotlin
+val lazyJob = launch(start = CoroutineStart.LAZY) { /* ... */ }
+lazyJob.start() // 이 호출을 통해 명시적으로 코루틴 시작
+- 이 코드는 `launch` 시 `CoroutineStart.LAZY`을 설정하여 코루틴을 즉시 시작하지 않습니다. `start()` 메소드로 코루틴을 수동으로 시작합니다.
+```
 ### 4.4. 코루틴 취소하기
+- 코루틴은 `cancel` 메소드를 사용해 언제든지 취소할 수 있으며, 이는 코루틴이 더 이상 필요하지 않을 때 사용됩니다.
+
 #### 4.4.1. cancel 사용해 Job 취소하기
+```kotlin
+val job = launch { /* ... */ }
+job.cancel() // 코루틴을 취소합니다.
+- 이 코드는 실행 중이거나 아직 시작되지 않은 코루틴을 취소하는 `cancel` 메소드를 호출합니다.
+```
 #### 4.4.2. cancelAndJoin을 사용한 순차 처리
+```kotlin
+val job = launch { /* ... */ }
+job.cancelAndJoin() // 코루틴을 취소하고, 완전히 종료될 때까지 기다립니다.
+- `cancelAndJoin`은 `cancel`과 `join`을 동시에 수행하여 코루틴을 취소하고 완전히 종료될 때까지 기다리는 효과가 있습니다.
+```
 ### 4.5. 코루틴의 취소 확인
+- 코루틴 내부에서는 주기적으로 취소가 발생했는지를 확인하고 적절하게 대응하는 것이 중요합니다.
+
 #### 4.5.1. delay를 사용한 취소 확인
+```kotlin
+launch {
+    try {
+        delay(Long.MAX_VALUE) // 오랜 시간 동안 대기
+    } catch (e: CancellationException) {
+        // 취소 시 예외 처리
+    }
+}
+- `delay` 함수는 코루틴이 취소되었을 때 `CancellationException`을 발생시켜 취소 상태를 확인할 수 있습니다.
+```
 #### 4.5.2. yield를 사용한 취소 확인
+```kotlin
+launch {
+    while (isActive) { // 코루틴이 활성 상태인지 확인
+        yield() // 취소를 확인하고 처리합니다.
+        // ...
+    }
+}
+```
+- `yield`는 현재 코루틴이 다른 코루틴에게 실행을 양보하고 취소되었으면 `CancellationException`을 발생시켜 처리할 기회를 제공합니다.
+
 #### 4.5.3. CoroutineScope.isActive를 사용한 취소 확인
+```kotlin
+launch {
+    if (!isActive) return@launch // 코루틴이 활성 상태가 아니라면 종료합니다.
+    // ...
+}
+- `isActive`는 현재 코루틴의 상태가 활성 상태인지 아닌지를 반환합니다. 이를 이용해 코루틴 내부에서 취소 여부를 확인하고 대응할 수 있습니다.
+```
 ### 4.6. 코루틴의 상태와 Job의 상태 변수
+- `Job`의 생명 주기는 여러 상태를 가지며, 이를 확인하여 코루틴의 실행 상태를 관리할 수 있습니다.
+
 #### 4.6.1. Job의 상태를 출력하는 함수 만들기
+```kotlin
+fun printJobStatus(job: Job) {
+    println("IsActive: ${job.isActive}, IsCompleted: ${job.isCompleted}, IsCancelled: ${job.isCancelled}")
+}
+- 이 함수는 `Job` 인스턴스를 매개변수로 받아 현재 활성(active), 완료(completed), 취소(cancelled) 상태를 출력합니다.
+```
 #### 4.6.2. 생성 상태의 코루틴
+- 코루틴이 시작되지 않아 초기 상태에 있는 것을 나타냅니다.
+
 #### 4.6.3. 실행 중 상태의 코루틴
+- 코루틴이 실행 중이며 작업이 진행되고 있는 상태입니다.
+
 #### 4.6.4. 실행 완료 상태의 코루틴
+- 코루틴의 모든 작업이 완료되어 더 이상 진행되지 않는 상태를 의미합니다.
+
 #### 4.6.5. 취소 중인 코루틴
+- 코루틴이 취소 요청을 받았으나 아직 완전히 취소 처리가 완료되지 않은 중간 상태입니다.
+
 #### 4.6.6. 취소 완료된 코루틴
+- 코루틴이 취소 요청을 처리하고 모든 관련 리소스가 정리된 상태입니다.
+
 #### 4.6.7. 상태 정리
+- `Job`의 상태를 통해 코루틴의 생명 주기를 정리하고 의도한 동작이 일어나도록 관리할 수 있습니다.
 
 
 ## 5장 async와 Deferred
