@@ -139,20 +139,69 @@ launch(CoroutineName("MyCoroutine")) {
 - `CoroutineDispatcher`는 코루틴이 어떤 스레드에서 실행될지를 결정하는 코틀린의 구성 요소입니다.
 
 #### 3.1.1. CoroutineDispatcher의 동작 살펴보기
+- `CoroutineDispatcher`는 코루틴으로 작업을 어떤 스레드로 보낼지 결정하고, 스케줄링하는 원리를 관장합니다.
+
 #### 3.1.2. CoroutineDispatcher의 역할
+- `CoroutineDispatcher`의 주요 역할은 코루틴의 실행을 특정 스레드나 스레드 풀에 할당하는 것으로 이는 코루틴의 병렬성과 성능에 영향을 미칩니다.
+
 ### 3.2. 제한된 디스패처와 무제한 디스패처
+- 제한된 디스패처는 고정된 수의 스레드를 사용하는 반면, 무제한 디스패처는 필요에 따라 스레드를 무제한으로 생성할 수 있습니다.
+
 ### 3.3. 제한된 디스패처 생성하기
+- 일부 작업에 대해 구체적인 스레드 수나 스레드 풀을 제한하기 위해, 코틀린은 특정 스레드 사이즈를 가진 디스패처를 생성할 수 있게 합니다.
+
 #### 3.3.1. 단일 스레드 디스패처 만들기
+```kotlin
+val singleThreadContext = newSingleThreadContext("MySingleThread")
+//- 이 코드는 코루틴이 실행될 단일 스레드 컨텍스트를 생성합니다.
+
+```
 #### 3.3.2. 멀티 스레드 디스패처 만들기
+```kotlin
+val multiThreadContext = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
+- 이 코드는 고정된 네 개의 스레드를 가진 디스패처를 만들어 멀티 스레드 코루틴을 가능하게 합니다.
+```
 ### 3.4. CoroutineDispatcher 사용해 코루틴 실행하기
+- `CoroutineDispatcher`를 사용해 코루틴을 실행하면, 작업의 실행 위치(스레드)를 세밀하게 제어할 수 있습니다.
+
 #### 3.4.1. launch의 파라미터로 CoroutineDispatcher 사용하기
+```kotlin
+launch(singleThreadContext) {
+    // 이 코루틴은 singleThreadContext에 지정된 단일 스레드에서 실행됩니다.
+}
+// - 이 코드는 `launch`에 `singleThreadContext`를 제공하여 해당 코루틴을 특정 스레드에서 실행하도록 합니다.
+
+```
 #### 3.4.2. 부모 코루틴의 CoroutineDispatcher 사용해 자식 코루틴 실행하기
+```kotlin
+val job = launch(coroutineContext) {
+    launch {
+        // 이 자식 코루틴은 부모와 동일한 CoroutineDispatcher를 사용합니다.
+    }
+}
+//- 여기서 `coroutineContext`는 부모 코루틴의 컨텍스트를 자식에게 상속시켜 동일한 디스패처에서 실행되도록 합니다.
+
+```
 ### 3.5. 미리 정의된 CoroutineDispatcher
+- Kotlin은 `Dispatchers` 객체를 통해 미리 정의된 여러 디스패처를 제공합니다, 아래와 같이 특정한 사용 케이스에 적합합니다.
+
 #### 3.5.1. Dispatchers.IO
+- 입출력 중심의 작업을 위한 디스패처입니다, 파일, 네트워크 작업 등에 최적화되어 있습니다.
+
 #### 3.5.2. Dispatchers.Default
+- CPU 사용량이 많은 작업을 위한 디스패처로, 기본적으로 사용 가능한 CPU 코어 수에 비례하는 스레드 풀을 사용합니다.
+
 #### 3.5.3. limitedParallelism 사용해 Dispatchers.Default 스레드 사용 제한하기
+```kotlin
+val limitedDispatcher = Dispatchers.Default.limitedParallelism(2)
+//- 이 코드는 `Dispatchers.Default`의 병렬성을 제한하여 동시에 실행될 수 있는 스레드의 최대 개수를 설정합니다.
+```
+
 #### 3.5.4. 공유 스레드풀을 사용하는 Dispatchers.IO와 Dispatchers.Default
+- `Dispatchers.IO`와 `Dispatchers.Default`는 두 범주의 작업을 위해 최적화된 공유 스레드풀을 사용하여 자원을 효율적으로 관리합니다.
+
 #### 3.5.5. Dispatchers.Main
+- 주로 UI 작업을 위해 사용되는 메인 디스패처로, 안드로이드와 같은 일부 환경에서 메인 스레드에서 실행되는 작업에 적합합니다.
 
 
 ## 4장 코루틴 빌더와 Job
