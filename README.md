@@ -388,18 +388,57 @@ val result = withContext(Dispatchers.Default) { computeSomething() }
 <a href="#" onclick="window.scrollTo(0, 0); return false;">맨 위로 올라가기</a>
 
 ### 6.1. CoroutineContext의 구성 요소
+- `CoroutineContext`는 코루틴의 실행 상태와 스케줄링 등을 제어하는 여러 구성 요소(예: `Job`, `Dispatcher`)를 포함합니다.
+
 ### 6.2. CoroutineContext 구성하기
+- 코루틴의 행동을 지정하기 위해 `CoroutineContext`를 구성하며, 다양한 요소들을 조합하여 커스텀 코루틴 컨텍스트를 만듭니다.
+
 #### 6.2.1. CoroutineContext가 구성 요소를 관리하는 방법
+- `CoroutineContext`는 내부적으로 `Element`들을 맵처럼 관리하며, 각 요소는 고유한 키를 통해 식별됩니다.
+
 #### 6.2.2. CoroutineContext 구성
+```kotlin
+val context = Dispatchers.Default + CoroutineName("MyCoroutine")
+//- 이 코드는 기본 스레드 디스패처와 코루틴 이름을 포함하는 새로운 `CoroutineContext`를 생성합니다.
+```
 #### 6.2.3. CoroutineContext 구성 요소 덮어씌우기
+```kotlin
+val context = Dispatchers.Default + CoroutineName("MyCoroutine") + CoroutineName("NewCoroutineName")
+//- `CoroutineContext`에 같은 종류의 요소를 추가하면, 마지막에 추가한 요소로 이전 요소가 덮어씌워집니다.
+```
 #### 6.2.4. 여러 구성 요소로 이뤄진 CoroutineContext 합치기
+```kotlin
+val contextA = Dispatchers.Default + Job()
+val contextB = CoroutineName("MyCoroutine")
+val combinedContext = contextA + contextB
+//- `contextA`와 `contextB`를 `+` 연산자를 사용해 합쳐 새로운 `CoroutineContext`를 생성합니다.
+```
 #### 6.2.5. CoroutineContext에 Job 생성해 추가하기
+```kotlin
+val contextWithJob = Dispatchers.Default + Job()
+//- `Dispatchers.Default`에 `Job()`을 추가해 코루틴의 취소 및 생명주기 관리를 위한 `Job` 요소를 `CoroutineContext`에 추가합니다.
+```
 ### 6.3. CoroutineContext 구성 요소에 접근하기
+- `CoroutineContext`에 저장된 개별 요소에 접근하기 위해 `get` 연산자와 함께 해당 요소의 키를 사용합니다.
+
 #### 6.3.1. CoroutineContext 구성 요소의 키
+- 각 `CoroutineContext.Element`에는 고유한 타입의 `Key`가 있으며, 이 키를 통해 `Context` 내 요소에 접근할 수 있습니다.
+
 #### 6.3.2. 키를 사용해 CoroutineContext 구성 요소에 접근하기
+```kotlin
+val dispatcher = combinedContext[CoroutineDispatcher.Key]
+//- `combinedContext`로부터 `CoroutineDispatcher.Key`를 사용해 디스패처 요소에 접근합니다.
+```
 ### 6.4. CoroutineContext 구성 요소 제거하기
+- `CoroutineContext`에서 특정 요소를 제거하기 위해 `minusKey` 연산자와 해당 요소의 키를 사용합니다.
+
 #### 6.4.1. minusKey 사용해 구성 요소 제거하기
+```kotlin
+val newContext = combinedContext - CoroutineName.Key
+//- 위 코드는 `combinedContext`에서 `CoroutineName` 요소를 제거하여 `newContext`를 생성합니다.
+```
 #### 6.4.2. minusKey 함수 사용 시 주의할 점
+- `minusKey`를 사용해 요소를 제거할 때 없는 키를 지정한다 하더라도 오류가 발생하지 않으며, 그대로 원래의 `CoroutineContext`를 반환합니다.
 
 
 ## 7장 구조화된 동시성
