@@ -12,11 +12,11 @@
    (a) pwd (b) cd (c) ls (d) mkdir
    답: (c) ls
 
-2. 홈 디렉토리로 이동하는 명령어는?
+### 2. 홈 디렉토리로 이동하는 명령어는?
    (a) cd ~ (b) cd / (c) cd .. (d) cd -
    답: (a) cd ~
 
-3. 빈 파일을 생성하는 명령어는?
+### 3. 빈 파일을 생성하는 명령어는?
    (a) cat (b) touch (c) echo (d) >
    답: (b) touch
 
@@ -24,27 +24,27 @@
    (a) cd etc (b) cd /etc (c) cd ./etc (d) cd ../etc
    답: (b) cd /etc
 
-5. 파일의 내용을 화면에 출력하는 명령어는?
+### 5. 파일의 내용을 화면에 출력하는 명령어는?
    (a) ls (b) cat (c) echo (d) print
    답: (b) cat
 
-6. 환경 변수의 값을 출력하는 명령어는? 
+### 6. 환경 변수의 값을 출력하는 명령어는? 
    (a) env (b) set (c) export (d) echo $환경변수
    답: (d) echo $환경변수
 
-7. alias 명령어의 역할은?
+### 7. alias 명령어의 역할은?
    (a) 명령어 단축 (b) 명령어 히스토리 (c) 명령어 자동완성 (d) 명령어 취소
    답: (a) 명령어 단축
 
-8. 쉘 스크립트에서 주석 처리하는 기호는?
+### 8. 쉘 스크립트에서 주석 처리하는 기호는?
    (a) // (b) /* */ (c) # (d) %
    답: (c) #
 
-9. 쉘 스크립트의 첫 줄에 들어가는 내용은?
+### 9. 쉘 스크립트의 첫 줄에 들어가는 내용은?
    (a) #/bin/bash (b) #!/bin/sh (c) !#/bin/sh (d) /bin/sh
    답: (b) #!/bin/sh
 
-10. 쉘 스크립트 실행 권한을 주는 명령어는?
+### 10. 쉘 스크립트 실행 권한을 주는 명령어는?
     (a) ./script.sh (b) sh script.sh (c) chmod +x script.sh (d) run script.sh
     답: (c) chmod +x script.sh
 
