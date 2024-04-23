@@ -14,8 +14,6 @@ class Controller {
     private val tests = mutableListOf<TestDto>()
 
     @PostMapping("/test")
-
-
     fun postNickname(@RequestBody testDtoRequest: TestDtoRequest): ResponseEntity<Any> {
         val existingTest = tests.find { it.id == testDtoRequest.id }
         if (existingTest != null) {
