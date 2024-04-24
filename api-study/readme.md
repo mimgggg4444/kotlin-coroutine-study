@@ -1,11 +1,55 @@
 
-물론입니다. 각 폴더의 역할을 한문장으로 설명하면 다음과 같습니다:
 
 - `model`: 애플리케이션의 핵심 도메인 개념을 나타내는 데이터 모델을 정의합니다.
+  ```kotlin
+  data class User(
+      val id: Long,
+      val name: String,
+      val email: String,
+      val roles: Set<Role>
+  )
+  ```
+
 - `service`: 애플리케이션의 비즈니스 로직을 구현하는 서비스 계층의 코드가 포함되어 있습니다.
+  ```kotlin
+  @Service
+  class UserService(private val userRepository: UserRepository) {
+      fun createUser(user: User): User {
+          // 비즈니스 로직 구현
+          return userRepository.save(user)
+      }
+  }
+  ```
+
 - `repository`: 데이터베이스 또는 다른 데이터 저장소에 대한 액세스 및 영속성 작업을 수행합니다.
+  ```kotlin
+  @Repository
+  interface UserRepository : JpaRepository<User, Long> {
+      fun findByEmail(email: String): User?
+  }
+  ```
+
 - `controller`: 클라이언트 요청을 처리하고 응답을 반환하는 프레젠테이션 계층의 컨트롤러 코드가 있습니다.
+  ```kotlin
+  @RestController
+  @RequestMapping("/users")
+  class UserController(private val userService: UserService) {
+      @PostMapping
+      fun createUser(@RequestBody user: User): ResponseEntity<User> {
+          val createdUser = userService.createUser(user)
+          return ResponseEntity.ok(createdUser)
+      }
+  }
+  ```
+
 - `dto`: 클라이언트와 서버 간에 데이터를 전송하기 위한 데이터 전송 객체(DTO)를 정의합니다.
+  ```kotlin
+  data class UserDto(
+      val id: Long,
+      val name: String,
+      val email: String
+  )
+  ```
 
 
 ---
