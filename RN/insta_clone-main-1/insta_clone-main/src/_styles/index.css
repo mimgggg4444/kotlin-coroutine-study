@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  #root {
+    @apply  bg-white dark:bg-gray-900 text-black dark:text-white w-screen min-h-screen;
+  }
+
+  #phone-rotator {
+    background-image: url("../assets/home-phones-2x.png");
+    background-position-x: -46px;
+    background-position-y: 0px;
+    background-size: 468.32px 634.15px;
+    background-repeat: no-repeat;
+    flex-basis: 380.32px;
+    height: 581.148px;
+    display: flex;
+    margin-right: 32px;
+    margin-bottom: 12px;
+  }
+
+  #phone-rotator-container {
+    @apply ml-28 mt-7 flex flex-col relative w-full;
+  }
+
+  #phone-rotator > div > img {
+    width:250px;
+    height:538.836px;
+    @apply absolute top-0 left-0;
+  }
+
+  .active {
+    @apply opacity-100 transition-all duration-500;
+  }
+  .inactive {
+    @apply opacity-0 transition-all duration-500;
+  }
+}
