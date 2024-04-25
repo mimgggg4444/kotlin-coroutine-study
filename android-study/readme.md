@@ -1,5 +1,275 @@
 !
+```
+val intent = Intent(this, DetailActivity::class.java)
+intent._____("KEY_MESSAGE", "Hello, DetailActivity!")
+startActivity(intent)
+//putExtra
+```
 
+```
+val message = intent._____("KEY_MESSAGE") ?: ""
+//getStringExtra
+```
+
+---
+---
+
+```
+val intent = Intent(this, SecondActivity::class.java)
+___(intent)
+정답: startActivity
+```
+
+
+```
+private lateinit var binding: ActivityMainBinding
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    binding = ActivityMainBinding.___(layoutInflater)
+    setContentView(binding.root)
+}
+정답: inflate
+
+
+```
+
+```
+class MyFragment : ___() {
+    ...
+}
+정답: Fragment
+
+
+```
+
+```
+override fun ___(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    // View 초기화 작업
+}
+정답: onViewCreated
+
+
+```
+
+```
+supportFragmentManager.beginTransaction()
+    .___(R.id.container, MyFragment())
+    .commit()
+정답: replace
+
+
+```
+
+```
+val builder = _____
+    .Builder(context, CHANNEL_ID)
+    .setSmallIcon(R.drawable.notification_icon)
+    .setContentTitle("My Notification")
+    .setContentText("Hello, World!")
+    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+정답: NotificationCompat
+```
+
+
+```
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    val name = getString(R.string.channel_name)
+    val descriptionText = getString(R.string.channel_description)
+    val importance = NotificationManager.IMPORTANCE_DEFAULT
+    val channel = _____(CHANNEL_ID, name, importance).apply {
+        description = descriptionText
+    }
+    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.createNotificationChannel(channel)
+}
+정답: NotificationChannel
+```
+
+
+```
+with(NotificationManagerCompat.from(context)) {
+    _____(NOTIFICATION_ID, builder.build())
+}
+정답: notify
+```
+
+```
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    view.findViewById<Button>(R.id.button)._____({
+        // 버튼 클릭 이벤트 처리
+    })
+}
+정답: setOnClickListener
+```
+
+```
+val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+    .setSmallIcon(R.drawable.notification_icon)
+    .setContentTitle("My Notification")
+    .setContentText("Hello, World!")
+    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+with(NotificationManagerCompat.from(context)) {
+    _____(NOTIFICATION_ID, builder.build())
+}
+```
+
+```
+val intent = Intent(this, SecondActivity::class.java).apply {
+    _____(KEY_MESSAGE, "Hello from FirstActivity")
+}
+startActivity(intent)
+```
+
+```
+private lateinit var adapter: MyAdapter
+
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+    adapter = MyAdapter(data)
+    recyclerView._____(adapter)
+}
+정답: adapter
+```
+
+```
+private lateinit var viewModel: MyViewModel
+
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    viewModel = ViewModelProvider(this).get(MyViewModel::class.java)
+    viewModel.data.observe(viewLifecycleOwner, {
+        // 데이터 업데이트
+        adapter._____(it)
+    })
+}
+정답: submitList
+```
+
+```
+private fun createNotificationChannel() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES._____) {
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
+        }
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+}
+정답: O
+```
+
+### sharedpreferences
+```
+val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+val editor = sharedPreferences.edit()
+editor.putString("userName", "John")
+editor._____()
+
+val userName = sharedPreferences._____("userName", "")
+정답: apply, getString
+
+```
+
+```
+FragmentManager를 사용하여 Fragment를 전환하는 코드를 작성하세요.
+정답:
+
+kotlin supportFragmentManager.beginTransaction()
+    .replace(R.id.container, MyFragment())
+    .addToBackStack(null)
+    .commit()
+```
+
+```
+Fragment에서 ViewModel을 사용하여 데이터를 공유하는 방법을 설명하고, 코드로 구현하세요.
+정답:
+
+kotlin class MyViewModel : ViewModel() {
+    val data = MutableLiveData<String>()
+}
+
+class MyFragment : Fragment() {
+    private lateinit var viewModel: MyViewModel
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
+        viewModel.data.observe(viewLifecycleOwner, {
+            // 데이터 업데이트
+        })
+    }
+}
+```
+
+```
+Notification 채널을 생성하고, 알림을 표시하는 코드를 작성하세요.
+정답:
+
+kotlin private fun createNotificationChannel() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val name = getString(R.string.channel_name)
+        val descriptionText = getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            description = descriptionText
+        }
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+}
+
+private fun showNotification() {
+    val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        .setSmallIcon(R.drawable.notification_icon)
+        .setContentTitle("My Notification")
+        .setContentText("Hello, World!")
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    with(NotificationManagerCompat.from(this)) {
+        notify(NOTIFICATION_ID, builder.build())
+    }
+}
+```
+
+```
+Intent를 사용하여 Activity 간에 데이터를 전달하는 코드를 작성하세요.
+정답:
+
+kotlin // FirstActivity
+val intent = Intent(this, SecondActivity::class.java)
+intent.putExtra("message", "Hello from FirstActivity")
+startActivity(intent)
+
+// SecondActivity
+val message = intent.getStringExtra("message")
+```
+
+```
+View Binding을 사용하여 RecyclerView에 데이터를 표시하는 코드를 작성하세요.
+정답:
+
+kotlin private lateinit var binding: ActivityMainBinding
+private lateinit var adapter: MyAdapter
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
+    adapter = MyAdapter(data)
+    binding.recyclerView.adapter = adapter
+}
+```
+
+
+---
+---
 
 ### Fragment 
 ```
@@ -175,17 +445,7 @@ startService(intent)
 ```
 
 
-```
-val intent = Intent(this, DetailActivity::class.java)
-intent._____("KEY_MESSAGE", "Hello, DetailActivity!")
-startActivity(intent)
-//putExtra
-```
 
-```
-val message = intent._____("KEY_MESSAGE") ?: ""
-//getStringExtra
-```
 
 ### View Binding
 
