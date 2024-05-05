@@ -8,6 +8,4 @@ cd Daelim-Univ
 
 파일트리 출력하기
 
-bash
-
 git ls-tree -r main --name-only
