@@ -9,3 +9,8 @@ cd Daelim-Univ
 파일트리 출력하기
 
 git ls-tree -r main --name-only
+
+
+예시: lib 디렉토리의 모든 파일 코드 출력
+
+find lib -type f -exec cat {} +
