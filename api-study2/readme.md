@@ -64,7 +64,7 @@ class SwaggerConfig {
 ```
 - SwaggerConfig에 api 메서드를 추가하여 /users/** 경로에 대한 API 문서를 생성합니다.
 
-```
+``` kotlin
 // UserController.kt
 @RestController
 @RequestMapping("/users")
