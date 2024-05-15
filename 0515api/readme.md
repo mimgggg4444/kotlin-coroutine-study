@@ -1,6 +1,11 @@
-### 
+### 해외축구
 
+- https://docs.football-data.org/general/v4/coding/python.html#_plain_request
 
+---
+---
+
+### 로또
 - https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=1119
 - "www.dhlottery.co.kr/common.do" @GET method = "getLottoNumber" drwNo = "\(조회하고자 하는 회차 번호)"
 
@@ -10,7 +15,7 @@ example - {"totSellamnt":111840714000,"returnValue":"success","drwNoDate":"2024-
 
 ---
 ---
-
+### 꽃가루
 -GET
 /getPinePollenRiskIdxV3
 꽃가루농도위험지수(소나무)조회
@@ -22,3 +27,7 @@ GET
 GET
 /getOakPollenRiskIdxV3
 꽃가루농도위험지수(참나무)조회
+
+###
+
+
