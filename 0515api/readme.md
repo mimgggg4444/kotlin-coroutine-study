@@ -1,6 +1,19 @@
 ### 해외축구
 
 - https://docs.football-data.org/general/v4/coding/python.html#_plain_request
+src
+└── main
+├── kotlin
+│   └── com
+│       └── example
+│           ├── config
+│           │   └── FootballDataConfig.kt
+│           ├── service
+│           │   └── FootballDataService.kt
+│           └── controller
+│               └── FootballDataController.kt
+└── resources
+└── application.properties
 
 ---
 ---
