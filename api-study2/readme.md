@@ -31,6 +31,61 @@ class UserService(
 }
 ```
 
+- BCryptPasswordEncoder를 사용하여 비밀번호를 암호화하면, 원본 비밀번호 데이터 자체는 데이터베이스에 저장되지 않습니다. 대신 암호화된 해시 값만 저장됩니다. BCrypt는 일방향 해시 함수를 사용하므로, 암호화된 해시 값에서 원본 비밀번호를 복원할 수 없습니다.
+
+### 추가 - 입력된 비밀번호와 데이터베이스에 저장된 해시 값을 비교하여 인증을 수행합니다
+``` kotlin
+fun validateUser(username: String, password: String): Boolean {
+    val user = userRepository.findByUsername(username)
+    return user?.let { passwordEncoder.matches(password, user.password) } ?: false
+}
+```
+
+
+---
+---
+
+### 추가 - API 문서화 (Swagger 사용)
+
+``` kotlin
+// SwaggerConfig.kt
+@Configuration
+class SwaggerConfig {
+    // 기존 코드
+
+    @Bean
+    fun api(): GroupedOpenApi {
+        return GroupedOpenApi.builder()
+            .group("user-api")
+            .pathsToMatch("/users/**")
+            .build()
+    }
+}
+```
+- SwaggerConfig에 api 메서드를 추가하여 /users/** 경로에 대한 API 문서를 생성합니다.
+
+```
+// UserController.kt
+@RestController
+@RequestMapping("/users")
+class UserController(private val userService: UserService) {
+
+    @PostMapping("/register")
+    @Operation(summary = "회원 가입 API", description = "새로운 사용자를 등록합니다.")
+    fun register(
+        @RequestParam username: String,
+        @RequestParam password: String
+    ): ResponseEntity<User> {
+        return ResponseEntity.ok(userService.registerUser(username, password))
+    }
+
+    // 다른 메서드들은 생략
+}
+```
+- UserController의 각 메서드에 @Operation 애노테이션을 사용하여 API 문서에 설명을 추가합니다.
+- Swagger UI에서 /swagger-ui/index.html 경로를 통해 API 문서를 확인할 수 있습니다.
+
+
 ---
 ---
 
