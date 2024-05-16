@@ -51,7 +51,11 @@ if(!result.canceled) if (result.assets && result.assets.length)
 
 userId -> Storage, Profile -> userid.png
 
-firebase에 저장할 위치 설정
+1. firebase에 저장할 위치 설정
+  1. 유저 아이디
+     1. const userId = auth.currentUser?.uid
+  3. 저장 경로
+
 
 firebase에 업로드
 
@@ -60,6 +64,56 @@ firebase에 업로드
 2. 변환된 데이터를 파이어베이스에 업로드
 
 스크린에서 나의 프로필 바뀐 이미지로 새로고침
+
+---
+---
+
+``` tsx
+    const storageRef = ref(
+      storage,
+      `images/${userRef}/${new Date().getTime()}`
+    );
+```
+
+``` tsx
+    const storageRef = ref(
+      storage,
+      `images/${userRef}/${new Date().getTime()}`
+    );
+
+```
+
+/**
+*
+*assets => blob 데이터로 변환
+*
+*/
+
+---
+---
+
+
+cons blob = await assetToBlob(uri);
+uploadBytes(firebasePath, blob)
+
+const uploadTask = await uploadBytes(firebasePath, blob);
+
+
+firebase에 업로드된 이미지의 uri 가져오기
+
+
+export type MyUser = {name:string; email: string; creationTime:string;photoURL:string;}
+const[user,setUser]=useState<MyUser>();
+
+1. 스크린에서 나의 프로필 바뀐 이미지로 새로고침
+  1. 서버에서의 나의 프로필 이미지 업데이트
+     1.  await updateProfile(auth.currentUser,{photoURL:photoUrl})
+     2.  
+  3. 로컬화면에서 나의 프로필 이미지 갱신
+
+setUser({name:auth.currentUser.displayName, email:auth.currentUser.email, cretionTime:auth.currentUser.metadata.creationTime,photoURL,});
+
+
 
 
 
