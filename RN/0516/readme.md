@@ -5,7 +5,7 @@ container <- controller -> screen
 
 props - screen이 넘어갈때 넘겨주는 데이터 모두
 
-``` type script
+``` tsx
 export default({user, onSingout, onEditImage}:Props)
 
 ```
