@@ -1,5 +1,23 @@
 ###
 
+---
+
+Firestore 사용 backend 같이
+
+DB (데이터가 저장되는 공간)
+
+-backend
+App client<-api->server<->db
+
+-인피니티 스크롤
+
+
+Server + db = firebase
+
+---
+
+
+
 container <- controller -> screen
 
 
