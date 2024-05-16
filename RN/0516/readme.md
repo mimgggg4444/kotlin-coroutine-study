@@ -114,6 +114,8 @@ const[user,setUser]=useState<MyUser>();
 setUser({name:auth.currentUser.displayName, email:auth.currentUser.email, cretionTime:auth.currentUser.metadata.creationTime,photoURL,});
 
 
+firebase , profile info
+
 
 
 
