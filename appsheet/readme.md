@@ -16,3 +16,5 @@
 
 
 AsyncStorage를 사용하여 출처에 저장하여 앱에 적용하도록 보호합니다.
+
+![image](https://github.com/mimgggg4444/kotlin-coroutine-study/assets/66135779/f47beba8-5d21-4fa5-bda9-d661d8e77c54)
