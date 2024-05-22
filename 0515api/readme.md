@@ -29,6 +29,9 @@ example - {"totSellamnt":111840714000,"returnValue":"success","drwNoDate":"2024-
 
 ---
 ---
+
+https://www.data.go.kr/data/15085289/openapi.do#/
+
 ### 꽃가루
 -GET
 /getPinePollenRiskIdxV3
