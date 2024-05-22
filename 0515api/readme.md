@@ -21,7 +21,10 @@ src
 
 ### 로또
 - https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=1119
-- "www.dhlottery.co.kr/common.do" @GET method = "getLottoNumber" drwNo = "\(조회하고자 하는 회차 번호)"
+- "www.dhlottery.co.kr/common.do"
+
+
+  @GET method = "getLottoNumber" drwNo = "\(조회하고자 하는 회차 번호)"
 
 
 example - {"totSellamnt":111840714000,"returnValue":"success","drwNoDate":"2024-05-11","firstWinamnt":1396028764,"drwtNo6":45,"drwtNo4":13,"firstPrzwnerCo":19,"drwtNo5":20,"bnusNo":3,"firstAccumamnt":26524546516,"drwNo":1119,"drwtNo2":9,"drwtNo3":12,"drwtNo1":1}
